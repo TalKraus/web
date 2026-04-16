@@ -12,3 +12,5 @@ build/
 .vscode/
 .idea/
 TEAM.md
+git-log.txt
+git-log.png

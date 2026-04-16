@@ -1,0 +1,233 @@
+commit 97191d0196a89b7b5e4b924614973fb76605ab30
+Author: Tal Karus <tal11kraus.gmail.com>
+Date:   Thu Apr 16 17:19:49 2026 +0300
+
+    readme: Upload docker hub image.
+    
+    Signed-off-by: Tal Karus <tal11kraus.gmail.com>
+
+commit c0804e7c341d2ccde8d5123d3bc7ffaab4d037f5
+Author: Tal Karus <tal11kraus.gmail.com>
+Date:   Thu Apr 16 16:23:25 2026 +0300
+
+    images: Add logo, favicon and screenshot
+    
+    Signed-off-by: Tal Karus <tal11kraus.gmail.com>
+
+commit a7e99f6ce8732fbe6d744f1b81b255f6de395618
+Author: Tal Karus <tal11kraus.gmail.com>
+Date:   Thu Apr 16 16:21:27 2026 +0300
+
+    fix: add favicon link to base.html
+    
+    Load favicon.ico from static/img/ using url_for so the
+    browser tab shows the TechRent Pro icon.
+
+commit e183d00b0deca93ab557b532c6ee5531a8943f58
+Author: Tal Karus <tal11kraus.gmail.com>
+Date:   Thu Apr 16 16:07:59 2026 +0300
+
+    fix: increase navbar logo size to 65px
+
+commit 1c04df34fd90f3e4e187a1e92077fd795e64bf73
+Author: Tal Karus <tal11kraus.gmail.com>
+Date:   Thu Apr 16 16:06:57 2026 +0300
+
+    fix: increase navbar logo size from 30px to 45px
+
+commit c0861b2b2056d8bc8f2023f4f8f6d683d2536d69
+Author: Tal Karus <tal11kraus.gmail.com>
+Date:   Thu Apr 16 16:06:36 2026 +0300
+
+    feat: add logo to navbar
+    
+    Display logo.png in the navigation bar next to the brand
+    name, as required by the assignment spec.
+
+commit 36ddb69cd0de4c2987eaba05851b7c69e0d5e2dd
+Author: Tal Karus <tal11kraus.gmail.com>
+Date:   Thu Apr 16 15:58:50 2026 +0300
+
+    readme: Improve README.md & Add screenshot.
+    
+    Signed-off-by: Tal Karus <tal11kraus.gmail.com>
+
+commit af2ffe21c4eb89afb0a1d5b115a2a1a805537555
+Author: Tal Karus <tal11kraus.gmail.com>
+Date:   Thu Apr 16 15:54:14 2026 +0300
+
+    fix: add docstring and type hint to main() function
+    
+    Every function must have a docstring per assignment requirements.
+
+commit b1e95b6db5425339674e24ee93342af4d7ee4cf9
+Author: Tal Karus <tal11kraus.gmail.com>
+Date:   Thu Apr 16 15:53:39 2026 +0300
+
+    fix: replace hard-coded /api/docs with url_for
+    
+    Use url_for('flasgger.apidocs') instead of a hard-coded URL
+    in the navbar, as required by the assignment.
+
+commit bc3c3e13f02defd7023d5dda36d3c446fb29e86c
+Author: Tal Karus <tal11kraus.gmail.com>
+Date:   Thu Apr 16 15:52:57 2026 +0300
+
+    fix: wrap database writes in try/except in API routes
+    
+    All API write operations now catch KeyError, ValueError, and
+    TypeError from db functions and return HTTP 400 with a JSON
+    error body instead of an unhandled 500.
+
+commit d6886a014f9b1dd42c84509fb3e26a0278e5f2d3
+Author: Tal Karus <tal11kraus.gmail.com>
+Date:   Thu Apr 16 15:51:44 2026 +0300
+
+    fix: add threading.Lock for thread-safe database writes
+    
+    Wrap all mutation functions (create, update, delete) with
+    _lock to ensure thread-safe writes to in-memory data stores.
+
+commit 2c3c926880075c0617fea13f8dfdef1555255b8e
+Author: Tal Karus <tal11kraus.gmail.com>
+Date:   Thu Apr 16 15:36:10 2026 +0300
+
+    team: Add Team.md file.
+    
+    Signed-off-by: Tal Karus <tal11kraus.gmail.com>
+
+commit 79270d64e5e1f937c60ff8995475b5241cba0520
+Author: Tal Karus <tal11kraus.gmail.com>
+Date:   Thu Apr 16 15:34:14 2026 +0300
+
+    erros: Add Erros handling pages.
+    
+    Signed-off-by: Tal Karus <tal11kraus.gmail.com>
+
+commit 9df392c73f2d69d34be8d84db45e01e5b5772c24
+Author: Tal Karus <tal11kraus.gmail.com>
+Date:   Thu Apr 16 15:32:11 2026 +0300
+
+    docker: Add Dockerfile & README.md how to use it.
+    
+    Signed-off-by: Tal Karus <tal11kraus.gmail.com>
+
+commit e25e27888f31cf840768efeb358516a7becb6f6c
+Author: Tal Karus <tal11kraus.gmail.com>
+Date:   Thu Apr 16 15:25:31 2026 +0300
+
+    swagger: Implement swagger API.
+    
+    Interactive REST API documentation generated automatically using flask-smorest or flasgger.
+    The API must cover all CRUD operations for equipment,
+    customers, and rentals as JSON endpoints.
+    
+    Signed-off-by: Tal Karus <tal11kraus.gmail.com>
+
+commit 15f589aef1739fa90803bf2dcdc39e162e917c11
+Author: Tal Karus <tal11kraus.gmail.com>
+Date:   Thu Apr 16 15:22:08 2026 +0300
+
+    report: Implement Report page.
+    
+    A simple analytics page.
+    
+    Signed-off-by: Tal Karus <tal11kraus.gmail.com>
+
+commit 1627872988e47953689323e66de48bc4d042dc22
+Author: Tal Karus <tal11kraus.gmail.com>
+Date:   Thu Apr 16 15:17:17 2026 +0300
+
+    rentals: Implement Rentals pages.
+    
+    The core business workflow: view all rentals and create new ones.
+    
+    Signed-off-by: Tal Karus <tal11kraus.gmail.com>
+
+commit 2527d30510167bd056865029f92b6bc38939a9dc
+Author: Tal Karus <tal11kraus.gmail.com>
+Date:   Thu Apr 16 15:10:50 2026 +0300
+
+    customer: Implement Customer Page.
+    
+    Manage the customer database. Because customers are relatively simple,
+    their list and form are both covered in this section.
+    
+    Signed-off-by: Tal Karus <tal11kraus.gmail.com>
+
+commit 4214f640ec9265458f3796ef6bb28bc5a9bd2a09
+Author: Tal Karus <tal11kraus.gmail.com>
+Date:   Thu Apr 16 14:27:59 2026 +0300
+
+    equipment: Implement Add & Edit Equipment pages.
+    
+    ( GET & POST /equipment/new  |/equipment/<id>/edit )
+    A single Jinja template (form.html) reused for both creating
+    new equipment and editing existing equipment
+    
+    Signed-off-by: Tal Karus <tal11kraus.gmail.com>
+
+commit 260869d9be0ad0d81f9c62f1daef656e7e3960ec
+Author: Tal Karus <tal11kraus.gmail.com>
+Date:   Thu Apr 16 14:18:22 2026 +0300
+
+    equipment: Implement Equipment Detail Page ( GET /equipment/<id> )
+    
+    A dedicated detail view for a single equipment item,
+    showing full metadata and its rental history.
+    
+    Signed-off-by: Tal Karus <tal11kraus.gmail.com>
+
+commit 09dc896e20c95dc5b86dd289383d648c46970179
+Author: Tal Karus <tal11kraus.gmail.com>
+Date:   Thu Apr 16 14:14:20 2026 +0300
+
+    equipment: Implement Equipment List Page (GET /equipment)
+    
+    Browse and manage the full equipment catalogue. This is the most-visited page in the app.
+    
+    Signed-off-by: Tal Karus <tal11kraus.gmail.com>
+
+commit 734809a6beeffd8a34d349c730ab098bdea6ee7d
+Author: Tal Karus <tal11kraus.gmail.com>
+Date:   Thu Apr 16 14:03:02 2026 +0300
+
+    dashboard: Implement dashboard page (GET /)
+    
+    Landing page that gives a snapshot of the entire system at a glance.
+    
+    Signed-off-by: Tal Karus <tal11kraus.gmail.com>
+
+commit 6bdfeaf77b0d5d46a9c9b5a8f5cc976fea7fe5d6
+Author: Tal Karus <tal11kraus.gmail.com>
+Date:   Thu Apr 16 14:02:05 2026 +0300
+
+    env: Add .env.example file
+    
+    Signed-off-by: Tal Karus <tal11kraus.gmail.com>
+
+commit 2ff2048e65bfe5ef3a4dea9490a685b6d7927d81
+Author: Tal Karus <tal11kraus.gmail.com>
+Date:   Thu Apr 16 14:01:50 2026 +0300
+
+    ignore: Ignore IDE setting folders (vsocde & pycharm)
+    
+    Signed-off-by: Tal Karus <tal11kraus.gmail.com>
+
+commit a327d20643ad418e9e6b0aec6570ec3467d5184e
+Author: Tal Karus <tal11kraus.gmail.com>
+Date:   Thu Apr 16 13:32:23 2026 +0300
+
+    init: Add basic app.py code
+    
+    Signed-off-by: Tal Karus <tal11kraus.gmail.com>
+
+commit 1994343f6d544b89fa89508ce7e0f27f709c02d8
+Author: Tal Karus <tal11kraus.gmail.com>
+Date:   Thu Apr 16 13:00:28 2026 +0300
+
+    init: Add .gitignore & .dockerignore files
+    
+    Don't push secret of bin files.
+    
+    Signed-off-by: Tal Karus <tal11kraus.gmail.com>

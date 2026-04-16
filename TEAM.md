@@ -7,4 +7,6 @@
 
 ## Git History
 
-(Add a screenshot of your git log here)
+[Git log file](./git-log.txt)
+
+![Git log screenshot](./git-log.png)
