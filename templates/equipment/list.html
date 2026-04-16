@@ -6,12 +6,12 @@
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1>Equipment Catalogue ({{ equipment_list | length }} items)</h1>
-    <a href="https://www.TODO.example"
+    <a href="{{ url_for('equipment.equipment_new_form') }}"
        class="btn btn-primary">+ Add Equipment</a>
 </div>
 
 <!-- Search / Filter Bar -->
-<form method="GET" action="https://www.TODO.example"
+<form method="GET" action="{{ url_for('equipment.equipment_list') }}"
       class="row g-2 mb-4">
     <div class="col-md-3">
         <label for="category-select" class="form-label">Category</label>
@@ -68,12 +68,12 @@
                     {% endif %}
                 </td>
                 <td>
-                    <a href="https://www.TODO.example"
+                    <a href="{{ url_for('equipment.equipment_detail', eq_id=item.id) }}"
                        class="btn btn-sm btn-outline-primary">View</a>
-                    <a href="https://www.TODO.example"
+                    <a href="{{ url_for('equipment.equipment_edit_form', eq_id=item.id) }}"
                        class="btn btn-sm btn-outline-warning">Edit</a>
                     <form method="POST"
-                          action="https://www.TODO.example"
+                          action="{{ url_for('equipment.equipment_delete', eq_id=item.id) }}"
                           style="display:inline"
                           onsubmit="return confirm('Are you sure you want to delete this equipment?');">
                         <button type="submit"
@@ -88,7 +88,7 @@
 {% else %}
 <div class="alert alert-info">
     No equipment found. Try a different search or
-    <a href="https://www.TODO.example">add new equipment</a>.
+    <a href="{{ url_for('equipment.equipment_new_form') }}">add new equipment</a>.
 </div>
 {% endif %}
 {% endblock %}

@@ -1,0 +1,107 @@
+<!-- equipment/form.html - Shared Add/Edit equipment form -->
+{% extends "base.html" %}
+{% block title %}
+    {% if equipment %}Edit Equipment{% else %}Add New Equipment{% endif %} - TechRent Pro
+{% endblock %}
+{% block nav_equipment %}active{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">
+    {% if equipment %}Edit Equipment{% else %}Add New Equipment{% endif %}
+</h1>
+
+<div class="card">
+    <div class="card-body">
+        <form method="POST"
+              action="{% if equipment %}{{ url_for('equipment.equipment_edit_submit', eq_id=equipment.id) }}{% else %}{{ url_for('equipment.equipment_new_submit') }}{% endif %}">
+
+            <!-- Name -->
+            <div class="mb-3">
+                <label for="name" class="form-label">Name *</label>
+                <input type="text" class="form-control
+                       {% if errors.name %}is-invalid{% endif %}"
+                       id="name" name="name"
+                       value="{{ form_data.name if form_data.name is defined and form_data.name else (equipment.name if equipment else '') }}">
+                {% if errors.name %}
+                <div class="invalid-feedback">{{ errors.name }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Category -->
+            <div class="mb-3">
+                <label for="category" class="form-label">Category *</label>
+                <select class="form-select
+                        {% if errors.category %}is-invalid{% endif %}"
+                        id="category" name="category">
+                    <option value="">Select a category</option>
+                    {% set current_cat = form_data.category if form_data.category is defined and form_data.category else (equipment.category if equipment else '') %}
+                    {% for cat in categories %}
+                    <option value="{{ cat }}"
+                        {% if current_cat == cat %}selected{% endif %}>
+                        {{ cat }}
+                    </option>
+                    {% endfor %}
+                    <option value="Other"
+                        {% if current_cat == "Other" %}selected{% endif %}>
+                        Other
+                    </option>
+                </select>
+                {% if errors.category %}
+                <div class="invalid-feedback">{{ errors.category }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Description -->
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="form-control" id="description" name="description"
+                          rows="3">{{ form_data.description if form_data.description is defined and form_data.description else (equipment.description if equipment else '') }}</textarea>
+            </div>
+
+            <!-- Daily Rate & Quantity -->
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="daily_rate" class="form-label">Daily Rate ($) *</label>
+                    <input type="number" step="0.01" min="0.01"
+                           class="form-control
+                           {% if errors.daily_rate %}is-invalid{% endif %}"
+                           id="daily_rate" name="daily_rate"
+                           value="{{ form_data.daily_rate if form_data.daily_rate is defined and form_data.daily_rate else (equipment.daily_rate if equipment else '') }}">
+                    {% if errors.daily_rate %}
+                    <div class="invalid-feedback">{{ errors.daily_rate }}</div>
+                    {% endif %}
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="quantity" class="form-label">Quantity *</label>
+                    <input type="number" min="1"
+                           class="form-control
+                           {% if errors.quantity %}is-invalid{% endif %}"
+                           id="quantity" name="quantity"
+                           value="{{ form_data.quantity if form_data.quantity is defined and form_data.quantity else (equipment.quantity if equipment else '') }}">
+                    {% if errors.quantity %}
+                    <div class="invalid-feedback">{{ errors.quantity }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Available checkbox -->
+            <div class="mb-3 form-check">
+                {% set is_checked = form_data.available if form_data.available is defined else (equipment.available if equipment else true) %}
+                <input type="checkbox" class="form-check-input"
+                       id="available" name="available"
+                       {% if is_checked %}checked{% endif %}>
+                <label class="form-check-label" for="available">Available for rental</label>
+            </div>
+
+            <!-- Buttons -->
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">
+                    {% if equipment %}Save Changes{% else %}Add Equipment{% endif %}
+                </button>
+                <a href="{{ url_for('equipment.equipment_list') }}"
+                   class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

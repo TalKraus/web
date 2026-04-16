@@ -124,6 +124,11 @@ rentals_db = [
     },
 ]
 
+_next_equipment_id = 7
+_next_customer_id = 5
+_next_rental_id = 4
+
+
 
 def get_dashboard_stats() -> dict:
     """
@@ -253,3 +258,74 @@ def get_equipment_categories() -> list[str]:
     """
     cats: set[str] = {str(item["category"]) for item in equipment_db}
     return sorted(cats)
+
+
+def create_equipment(data: dict) -> dict:
+    """
+    Create a new equipment item and add it to the database.
+
+    Args:
+        data (dict): Must contain name, category, daily_rate,
+                     quantity, description, available.
+
+    Returns:
+        dict: The newly created equipment dict with auto ID.
+    """
+    global _next_equipment_id
+    new_item = {
+        "id": _next_equipment_id,
+        "name": data["name"],
+        "category": data["category"],
+        "daily_rate": float(data["daily_rate"]),
+        "quantity": int(data["quantity"]),
+        "description": data.get("description", ""),
+        "available": bool(data.get("available", True)),
+    }
+    _next_equipment_id += 1
+    equipment_db.append(new_item)
+    return dict(new_item)
+
+
+def update_equipment(eq_id: int, data: dict) -> dict | None:
+    """
+    Update an existing equipment item.
+
+    Args:
+        eq_id (int): The ID of the item to update.
+        data (dict): Fields to update.
+
+    Returns:
+        dict or None: Updated equipment dict, or None if not found.
+    """
+    for item in equipment_db:
+        if item["id"] == eq_id:
+            item["name"] = data.get("name", item["name"])
+            item["category"] = data.get("category", item["category"])
+            item["daily_rate"] = float(
+                data.get("daily_rate", item["daily_rate"])
+            )
+            item["quantity"] = int(data.get("quantity", item["quantity"]))
+            item["description"] = data.get(
+                "description", item["description"]
+            )
+            if "available" in data:
+                item["available"] = bool(data["available"])
+            return dict(item)
+    return None
+
+
+def delete_equipment(eq_id: int) -> bool:
+    """
+    Delete an equipment item by ID.
+
+    Args:
+        eq_id (int): The ID of the item to delete.
+
+    Returns:
+        bool: True if deleted, False if not found.
+    """
+    for i, item in enumerate(equipment_db):
+        if item["id"] == eq_id:
+            equipment_db.pop(i)
+            return True
+    return False
