@@ -16,7 +16,12 @@
     <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="{{ url_for('dashboard') }}">
+            <a class="navbar-brand d-flex align-items-center"
+               href="{{ url_for('dashboard') }}">
+                <img src="{{ url_for('static', filename='img/logo.png') }}"
+                     alt="TechRent Pro Logo"
+                     height="30"
+                     class="me-2">
                 TechRent Pro
             </a>
             <button class="navbar-toggler" type="button"
