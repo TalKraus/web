@@ -106,7 +106,10 @@ def api_create_equipment() -> tuple[Response, int]:
     if errors:
         return jsonify({"error": ", ".join(errors)}), 400
 
-    item = db.create_equipment(data)
+    try:
+        item = db.create_equipment(data)
+    except (KeyError, ValueError, TypeError) as exc:
+        return jsonify({"error": str(exc)}), 400
     return jsonify(item), 201
 
 
@@ -174,7 +177,10 @@ def api_update_equipment(eq_id: int) -> tuple[Response, int]:
     if not data:
         return jsonify({"error": "Request body is required"}), 400
 
-    result = db.update_equipment(eq_id, data)
+    try:
+        result = db.update_equipment(eq_id, data)
+    except (KeyError, ValueError, TypeError) as exc:
+        return jsonify({"error": str(exc)}), 400
     if not result:
         return jsonify({"error": "Equipment not found"}), 404
     return jsonify(result), 200
@@ -198,7 +204,11 @@ def api_delete_equipment(eq_id: int) -> tuple[Response, int]:
       404:
         description: Equipment not found
     """
-    if db.delete_equipment(eq_id):
+    try:
+        deleted = db.delete_equipment(eq_id)
+    except (KeyError, ValueError, TypeError) as exc:
+        return jsonify({"error": str(exc)}), 400
+    if deleted:
         return jsonify({"message": "Equipment deleted"}), 200
     return jsonify({"error": "Equipment not found"}), 404
 
@@ -270,7 +280,10 @@ def api_create_customer() -> tuple[Response, int]:
     if errors:
         return jsonify({"error": ", ".join(errors)}), 400
 
-    cust = db.create_customer(data)
+    try:
+        cust = db.create_customer(data)
+    except (KeyError, ValueError, TypeError) as exc:
+        return jsonify({"error": str(exc)}), 400
     return jsonify(cust), 201
 
 
@@ -313,7 +326,10 @@ def api_update_customer(cust_id: int) -> tuple[Response, int]:
     if email and not db.is_email_unique(email, exclude_id=cust_id):
         return jsonify({"error": "Email already registered"}), 400
 
-    result = db.update_customer(cust_id, data)
+    try:
+        result = db.update_customer(cust_id, data)
+    except (KeyError, ValueError, TypeError) as exc:
+        return jsonify({"error": str(exc)}), 400
     if not result:
         return jsonify({"error": "Customer not found"}), 404
     return jsonify(result), 200
@@ -344,7 +360,11 @@ def api_delete_customer(cust_id: int) -> tuple[Response, int]:
             {"error": "Cannot delete customer with active rentals"}
         ), 400
 
-    if db.delete_customer(cust_id):
+    try:
+        deleted = db.delete_customer(cust_id)
+    except (KeyError, ValueError, TypeError) as exc:
+        return jsonify({"error": str(exc)}), 400
+    if deleted:
         return jsonify({"message": "Customer deleted"}), 200
     return jsonify({"error": "Customer not found"}), 404
 
@@ -445,15 +465,18 @@ def api_create_rental() -> tuple[Response, int]:
     eq = db.get_equipment_by_id(eq_id)
     total_cost = eq["daily_rate"] * days  # type: ignore
 
-    rental = db.create_rental(
-        {
-            "equipment_id": eq_id,
-            "customer_id": cust_id,
-            "start_date": start_date,
-            "end_date": end_date,
-            "total_cost": total_cost,
-        }
-    )
+    try:
+        rental = db.create_rental(
+            {
+                "equipment_id": eq_id,
+                "customer_id": cust_id,
+                "start_date": start_date,
+                "end_date": end_date,
+                "total_cost": total_cost,
+            }
+        )
+    except (KeyError, ValueError, TypeError) as exc:
+        return jsonify({"error": str(exc)}), 400
     return jsonify(rental), 201
 
 
@@ -475,7 +498,10 @@ def api_mark_returned(rental_id: int) -> tuple[Response, int]:
       404:
         description: Rental not found or already returned
     """
-    result = db.mark_rental_returned(rental_id)
+    try:
+        result = db.mark_rental_returned(rental_id)
+    except (KeyError, ValueError, TypeError) as exc:
+        return jsonify({"error": str(exc)}), 400
     if result:
         return jsonify(result), 200
     return jsonify({"error": "Rental not found or already returned"}), 404
