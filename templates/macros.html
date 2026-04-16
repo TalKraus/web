@@ -1,0 +1,11 @@
+<!-- macros.html - Reusable Jinja2 macros -->
+
+{% macro status_badge(status) %}
+  {% if status == "active" %}
+    <span class="badge bg-success">Active</span>
+  {% elif status == "returned" %}
+    <span class="badge bg-secondary">Returned</span>
+  {% else %}
+    <span class="badge bg-danger">Overdue</span>
+  {% endif %}
+{% endmacro %}

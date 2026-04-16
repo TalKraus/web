@@ -5,8 +5,10 @@ import os
 
 from dotenv import load_dotenv
 from flasgger import Swagger
-from flask import Flask
+from flask import Flask, render_template
 
+
+import db
 
 
 def create_app() -> Flask:
@@ -20,6 +22,7 @@ def create_app() -> Flask:
 
     app = Flask(__name__)
     app.secret_key = os.environ.get("SECRET_KEY", os.urandom(24).hex())
+    
 
     # Swagger config
     swagger_config = {
@@ -45,8 +48,25 @@ def create_app() -> Flask:
         "basePath": "/api",
     }
     Swagger(app, config=swagger_config, template=swagger_template)
-
     # Register blueprints
+
+    # Dashboard route
+    @app.route("/")
+    def dashboard() -> str:
+        """
+        Render the main dashboard page.
+
+        Returns:
+            Response: Rendered index.html with stats
+                      and recent rentals.
+        """
+        stats = db.get_dashboard_stats()
+        recent = db.get_recent_rentals(limit=5)
+        return render_template(
+            "index.html",
+            stats=stats,
+            recent_rentals=recent,
+        )
 
     return app
 
