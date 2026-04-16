@@ -1,0 +1,72 @@
+<!-- customers/list.html - Customer list page -->
+{% extends "base.html" %}
+{% block title %}Customers - TechRent Pro{% endblock %}
+{% block nav_customers %}active{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Customers</h1>
+    <a href="{{ url_for('customers.customer_new_form') }}"
+       class="btn btn-primary">+ Register Customer</a>
+</div>
+
+<!-- Search Bar -->
+<form method="GET" action="{{ url_for('customers.customer_list') }}"
+      class="row g-2 mb-4">
+    <div class="col-md-5">
+        <input type="text" name="search" class="form-control"
+               placeholder="Search by name or email..."
+               value="{{ search_query }}">
+    </div>
+    <div class="col-md-2">
+        <button type="submit" class="btn btn-outline-secondary w-100">
+            Search
+        </button>
+    </div>
+</form>
+
+<!-- Customers Table -->
+{% if customers %}
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Registered</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cust in customers %}
+            <tr>
+                <td>{{ cust.id }}</td>
+                <td>{{ cust.name }}</td>
+                <td>{{ cust.email }}</td>
+                <td>{{ cust.phone }}</td>
+                <td>{{ cust.created_at }}</td>
+                <td>
+                    <a href="{{ url_for('customers.customer_edit_form', cust_id=cust.id) }}"
+                       class="btn btn-sm btn-outline-warning">Edit</a>
+                    <form method="POST"
+                          action="{{ url_for('customers.customer_delete', cust_id=cust.id) }}"
+                          style="display:inline"
+                          onsubmit="return confirm('Are you sure you want to delete this customer?');">
+                        <button type="submit"
+                                class="btn btn-sm btn-outline-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="alert alert-info">
+    No customers found.
+    <a href="{{ url_for('customers.customer_new_form') }}">Register a new customer</a>.
+</div>
+{% endif %}
+{% endblock %}

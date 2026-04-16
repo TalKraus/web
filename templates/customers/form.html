@@ -1,0 +1,65 @@
+<!-- customers/form.html - Shared Add/Edit customer form -->
+{% extends "base.html" %}
+{% block title %}
+    {% if customer %}Edit Customer{% else %}Register Customer{% endif %} - TechRent Pro
+{% endblock %}
+{% block nav_customers %}active{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">
+    {% if customer %}Edit Customer{% else %}Register Customer{% endif %}
+</h1>
+
+<div class="card">
+    <div class="card-body">
+        <form method="POST"
+              action="{% if customer %}{{ url_for('customers.customer_edit_submit', cust_id=customer.id) }}{% else %}{{ url_for('customers.customer_new_submit') }}{% endif %}">
+
+            <!-- Name -->
+            <div class="mb-3">
+                <label for="name" class="form-label">Full Name *</label>
+                <input type="text" class="form-control
+                       {% if errors.name %}is-invalid{% endif %}"
+                       id="name" name="name"
+                       value="{{ form_data.name if form_data.name is defined and form_data.name else (customer.name if customer else '') }}">
+                {% if errors.name %}
+                <div class="invalid-feedback">{{ errors.name }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Email -->
+            <div class="mb-3">
+                <label for="email" class="form-label">Email *</label>
+                <input type="email" class="form-control
+                       {% if errors.email %}is-invalid{% endif %}"
+                       id="email" name="email"
+                       value="{{ form_data.email if form_data.email is defined and form_data.email else (customer.email if customer else '') }}">
+                {% if errors.email %}
+                <div class="invalid-feedback">{{ errors.email }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Phone -->
+            <div class="mb-3">
+                <label for="phone" class="form-label">Phone *</label>
+                <input type="text" class="form-control
+                       {% if errors.phone %}is-invalid{% endif %}"
+                       id="phone" name="phone"
+                       value="{{ form_data.phone if form_data.phone is defined and form_data.phone else (customer.phone if customer else '') }}">
+                {% if errors.phone %}
+                <div class="invalid-feedback">{{ errors.phone }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Buttons -->
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">
+                    {% if customer %}Save Changes{% else %}Register Customer{% endif %}
+                </button>
+                <a href="{{ url_for('customers.customer_list') }}"
+                   class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,4 +1,8 @@
 
+# db.py - In-memory database with seed data and CRUD functions
+# TechRent Pro - Equipment Rental Platform
+
+from datetime import datetime
 
 
 # --- Seed Data ---
@@ -200,27 +204,23 @@ def get_rentals_for_equipment(eq_id: int) -> list[dict]:
             results.append(entry)
     return results
 
-
-# ===================== Customer Functions =====================
-
-
-def get_customer_by_id(cust_id: int) -> dict | None:
+def has_active_rentals(customer_id: int) -> bool:
     """
-    Find a single customer by ID.
+    Check if a customer has any active rentals.
 
     Args:
-        cust_id (int): The customer ID.
+        customer_id (int): The customer ID.
 
     Returns:
-        dict or None: The customer dict, or None if not found.
+        bool: True if the customer has active rentals.
     """
-    for cust in customers_db:
-        if cust["id"] == cust_id:
-            return dict(cust)
-    return None
-
-
-
+    for rental in rentals_db:
+        if (
+            rental["customer_id"] == customer_id
+            and rental["status"] == "active"
+        ):
+            return True
+    return False
 
 # ===================== Equipment Functions =====================
 
@@ -329,3 +329,112 @@ def delete_equipment(eq_id: int) -> bool:
             equipment_db.pop(i)
             return True
     return False
+
+# ===================== Customer Functions =====================
+
+def get_all_customers() -> list[dict]:
+    """
+    Return all customers sorted by name.
+
+    Returns:
+        list[dict]: List of all customer dicts.
+    """
+    return sorted(customers_db, key=lambda c: c["name"])
+
+
+def get_customer_by_id(cust_id: int) -> dict | None:
+    """
+    Find a single customer by ID.
+
+    Args:
+        cust_id (int): The customer ID.
+
+    Returns:
+        dict or None: The customer dict, or None if not found.
+    """
+    for cust in customers_db:
+        if cust["id"] == cust_id:
+            return dict(cust)
+    return None
+
+
+def create_customer(data: dict) -> dict:
+    """
+    Create a new customer.
+
+    Args:
+        data (dict): Must contain name, email, phone.
+
+    Returns:
+        dict: The newly created customer dict.
+    """
+    global _next_customer_id
+    new_cust = {
+        "id": _next_customer_id,
+        "name": data["name"],
+        "email": data["email"],
+        "phone": data["phone"],
+        "created_at": datetime.now().strftime("%Y-%m-%d"),
+    }
+    _next_customer_id += 1
+    customers_db.append(new_cust)
+    return dict(new_cust)
+
+
+def update_customer(cust_id: int, data: dict) -> dict | None:
+    """
+    Update an existing customer.
+
+    Args:
+        cust_id (int): The customer ID.
+        data (dict): Fields to update (name, email, phone).
+
+    Returns:
+        dict or None: Updated customer dict, or None.
+    """
+    for cust in customers_db:
+        if cust["id"] == cust_id:
+            cust["name"] = data.get("name", cust["name"])
+            cust["email"] = data.get("email", cust["email"])
+            cust["phone"] = data.get("phone", cust["phone"])
+            return dict(cust)
+    return None
+
+
+def delete_customer(cust_id: int) -> bool:
+    """
+    Delete a customer by ID. Refuses if active rentals exist.
+
+    Args:
+        cust_id (int): The customer ID.
+
+    Returns:
+        bool: True if deleted, False if not found or has rentals.
+    """
+    if has_active_rentals(cust_id):
+        return False
+    for i, cust in enumerate(customers_db):
+        if cust["id"] == cust_id:
+            customers_db.pop(i)
+            return True
+    return False
+
+
+def is_email_unique(email: str, exclude_id: int | None = None) -> bool:
+    """
+    Check if an email address is unique among customers.
+
+    Args:
+        email (str): The email to check.
+        exclude_id (int or None): Customer ID to exclude (for edits).
+
+    Returns:
+        bool: True if the email is unique.
+    """
+    for cust in customers_db:
+        cust_email = str(cust["email"])
+        if cust_email.lower() == email.lower():
+            if exclude_id is not None and cust["id"] == exclude_id:
+                continue
+            return False
+    return True
