@@ -1,0 +1,247 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="560" viewBox="0 0 640 560" fill="none">
+  <defs>
+    <!-- Teal ring gradient -->
+    <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#5EEAD4"/>
+      <stop offset="50%" stop-color="#14B8A6"/>
+      <stop offset="100%" stop-color="#0F766E"/>
+    </linearGradient>
+
+    <!-- Laptop body gradient -->
+    <linearGradient id="laptopBody" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#134E4A"/>
+      <stop offset="100%" stop-color="#042F2E"/>
+    </linearGradient>
+
+    <!-- Laptop screen gradient -->
+    <linearGradient id="laptopScreen" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2DD4BF"/>
+      <stop offset="100%" stop-color="#0D9488"/>
+    </linearGradient>
+
+    <!-- Camera body gradient -->
+    <linearGradient id="cameraBody" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1E293B"/>
+      <stop offset="60%" stop-color="#0F172A"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </linearGradient>
+
+    <linearGradient id="cameraHighlight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#334155"/>
+      <stop offset="100%" stop-color="#0F172A"/>
+    </linearGradient>
+
+    <!-- Lens radial gradient -->
+    <radialGradient id="lensGrad" cx="35%" cy="30%" r="75%">
+      <stop offset="0%" stop-color="#99F6E4"/>
+      <stop offset="25%" stop-color="#2DD4BF"/>
+      <stop offset="55%" stop-color="#0F766E"/>
+      <stop offset="85%" stop-color="#134E4A"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </radialGradient>
+
+    <radialGradient id="lensInner" cx="40%" cy="35%" r="60%">
+      <stop offset="0%" stop-color="#5EEAD4" stop-opacity="0.8"/>
+      <stop offset="60%" stop-color="#0F766E" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#020617" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Drone body gradient -->
+    <linearGradient id="droneBody" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1E293B"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </linearGradient>
+
+    <!-- Soft shadow under composition -->
+    <radialGradient id="groundShadow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#0F766E" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#0F766E" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- ============ GROUND SHADOW ============ -->
+  <ellipse cx="320" cy="355" rx="180" ry="14" fill="url(#groundShadow)"/>
+
+  <!-- ============ CIRCULAR BADGE ============ -->
+  <g transform="translate(320, 210)">
+    <!-- Thin outer ring -->
+    <circle cx="0" cy="0" r="162" fill="none" stroke="#14B8A6" stroke-width="1.5" opacity="0.35"/>
+
+    <!-- Main thick decorative arc (open at bottom) -->
+    <path d="M -148 40
+             A 150 150 0 1 1 148 40"
+          stroke="url(#ringGrad)"
+          stroke-width="16"
+          fill="none"
+          stroke-linecap="round"/>
+
+    <!-- Bottom accent sweep -->
+    <path d="M -90 130 Q -30 148 30 146 Q 80 142 120 118"
+          stroke="#0D9488"
+          stroke-width="10"
+          fill="none"
+          stroke-linecap="round"
+          opacity="0.85"/>
+
+    <!-- Small decorative dots on ring -->
+    <circle cx="-148" cy="40" r="5" fill="#5EEAD4"/>
+    <circle cx="148" cy="40" r="5" fill="#5EEAD4"/>
+  </g>
+
+  <!-- ============ CIRCUIT PATTERN (right side) ============ -->
+  <g stroke="#2DD4BF" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M 445 150 L 475 150 L 485 140 L 515 140"/>
+    <path d="M 465 150 L 465 170 L 495 170"/>
+    <path d="M 485 140 L 485 118 L 505 118"/>
+    <path d="M 455 185 L 485 185 L 495 195 L 520 195"/>
+  </g>
+  <g fill="#2DD4BF">
+    <circle cx="515" cy="140" r="4.5"/>
+    <circle cx="495" cy="170" r="4.5"/>
+    <circle cx="505" cy="118" r="4.5"/>
+    <circle cx="520" cy="195" r="4.5"/>
+    <circle cx="445" cy="150" r="3"/>
+    <circle cx="455" cy="185" r="3"/>
+  </g>
+
+  <!-- ============ LAPTOP (back-right) ============ -->
+  <g transform="translate(370, 235)">
+    <!-- Screen back -->
+    <path d="M 0 0 L 120 -8 L 128 -120 L 8 -115 Z"
+          fill="url(#laptopBody)" stroke="#0F766E" stroke-width="2.5"/>
+    <!-- Screen face -->
+    <path d="M 11 -10 L 115 -16 L 122 -108 L 18 -104 Z"
+          fill="url(#laptopScreen)"/>
+    <!-- Screen glare -->
+    <path d="M 30 -95 L 90 -98 L 80 -25 L 40 -22 Z"
+          fill="#5EEAD4" opacity="0.25"/>
+    <!-- Hinge highlight -->
+    <path d="M 0 0 L 120 -8 L 122 -2 L 2 6 Z" fill="#0F766E" opacity="0.5"/>
+
+    <!-- Laptop base (keyboard deck) -->
+    <path d="M -22 6 L 140 -4 L 154 28 L -12 38 Z"
+          fill="url(#laptopBody)" stroke="#0F766E" stroke-width="2.5"/>
+    <!-- Keyboard area -->
+    <path d="M 6 12 L 132 4 L 142 24 L 8 32 Z"
+          fill="#042F2E" opacity="0.7"/>
+    <!-- Trackpad hint -->
+    <rect x="55" y="20" width="30" height="6" rx="1" fill="#134E4A" opacity="0.6"/>
+  </g>
+
+  <!-- ============ CAMERA (center-front) ============ -->
+  <g transform="translate(245, 200)">
+    <!-- Pentaprism / viewfinder bump -->
+    <path d="M 52 -48 L 104 -48 L 110 -28 L 46 -28 Z"
+          fill="url(#cameraHighlight)" stroke="#1E293B" stroke-width="1.5"/>
+    <!-- Hot shoe -->
+    <rect x="66" y="-44" width="22" height="6" rx="1.5" fill="#475569"/>
+    <rect x="68" y="-42" width="18" height="2" fill="#1E293B"/>
+
+    <!-- Main body -->
+    <rect x="4" y="-28" width="150" height="92" rx="8"
+          fill="url(#cameraBody)" stroke="#334155" stroke-width="1.5"/>
+
+    <!-- Grip (right) -->
+    <path d="M 144 -28 L 172 -22 L 176 52 L 144 62 Z"
+          fill="#020617" stroke="#334155" stroke-width="1.5"/>
+    <!-- Grip texture -->
+    <path d="M 150 -10 L 170 -6 M 150 0 L 170 4 M 150 10 L 170 14 M 150 20 L 170 24 M 150 30 L 170 34"
+          stroke="#1E293B" stroke-width="1.5"/>
+
+    <!-- Shutter button -->
+    <circle cx="155" cy="-34" r="6" fill="#14B8A6"/>
+    <circle cx="155" cy="-34" r="3" fill="#0F766E"/>
+
+    <!-- Top dial -->
+    <circle cx="28" cy="-22" r="8" fill="#1E293B" stroke="#475569" stroke-width="1"/>
+    <circle cx="28" cy="-22" r="4" fill="#0F172A"/>
+
+    <!-- Brand strip -->
+    <rect x="18" y="42" width="48" height="4" rx="1" fill="#14B8A6"/>
+
+    <!-- ===== LENS ===== -->
+    <!-- Outer mount ring -->
+    <circle cx="76" cy="18" r="58" fill="#020617"/>
+    <!-- Barrel -->
+    <circle cx="76" cy="18" r="54"
+            fill="url(#cameraHighlight)" stroke="#334155" stroke-width="2"/>
+    <!-- Focus ring detail -->
+    <circle cx="76" cy="18" r="50"
+            fill="none" stroke="#1E293B" stroke-width="3"/>
+    <circle cx="76" cy="18" r="47"
+            fill="none" stroke="#475569" stroke-width="1" opacity="0.6"/>
+
+    <!-- Front element base -->
+    <circle cx="76" cy="18" r="42" fill="#020617"/>
+    <!-- Front glass -->
+    <circle cx="76" cy="18" r="38" fill="url(#lensGrad)"/>
+    <!-- Internal reflection -->
+    <circle cx="76" cy="18" r="30" fill="url(#lensInner)"/>
+    <!-- Subtle coating rings -->
+    <circle cx="76" cy="18" r="25" fill="none" stroke="#5EEAD4" stroke-width="0.8" opacity="0.4"/>
+    <circle cx="76" cy="18" r="18" fill="none" stroke="#99F6E4" stroke-width="0.6" opacity="0.5"/>
+
+    <!-- Lens highlight (the "shine") -->
+    <ellipse cx="62" cy="5" rx="14" ry="10" fill="#99F6E4" opacity="0.55" transform="rotate(-25 62 5)"/>
+    <ellipse cx="58" cy="2" rx="6" ry="4" fill="#F0FDFA" opacity="0.9" transform="rotate(-25 58 2)"/>
+
+    <!-- Tiny secondary highlight -->
+    <circle cx="88" cy="32" r="3" fill="#5EEAD4" opacity="0.7"/>
+  </g>
+
+  <!-- ============ DRONE (top-left, overlapping circle) ============ -->
+  <g transform="translate(220, 115)">
+    <!-- Connecting arms -->
+    <rect x="-62" y="-4" width="60" height="8" rx="3" fill="#1E293B"/>
+    <rect x="52" y="-4" width="60" height="8" rx="3" fill="#1E293B"/>
+
+    <!-- Left rotor mount -->
+    <circle cx="-62" cy="0" r="8" fill="#0F172A"/>
+    <!-- Left propeller blur -->
+    <ellipse cx="-62" cy="0" rx="38" ry="4" fill="#14B8A6" opacity="0.55"/>
+    <ellipse cx="-62" cy="0" rx="4" ry="38" fill="#14B8A6" opacity="0.35"/>
+    <circle cx="-62" cy="0" r="4" fill="#5EEAD4"/>
+
+    <!-- Right rotor mount -->
+    <circle cx="112" cy="0" r="8" fill="#0F172A"/>
+    <!-- Right propeller blur -->
+    <ellipse cx="112" cy="0" rx="38" ry="4" fill="#14B8A6" opacity="0.55"/>
+    <ellipse cx="112" cy="0" rx="4" ry="38" fill="#14B8A6" opacity="0.35"/>
+    <circle cx="112" cy="0" r="4" fill="#5EEAD4"/>
+
+    <!-- Central body -->
+    <rect x="14" y="-12" width="36" height="24" rx="6" fill="url(#droneBody)" stroke="#334155" stroke-width="1"/>
+    <!-- Body highlight -->
+    <rect x="16" y="-10" width="32" height="4" rx="2" fill="#1E293B"/>
+
+    <!-- LED indicators -->
+    <circle cx="20" cy="-4" r="2" fill="#14B8A6"/>
+    <circle cx="44" cy="-4" r="2" fill="#EF4444"/>
+
+    <!-- Gimbal camera (underneath) -->
+    <rect x="22" y="10" width="20" height="14" rx="3" fill="#0F172A" stroke="#334155" stroke-width="1"/>
+    <circle cx="32" cy="18" r="4.5" fill="url(#lensGrad)"/>
+    <circle cx="30.5" cy="16.5" r="1.5" fill="#F0FDFA" opacity="0.8"/>
+  </g>
+
+  <!-- ============ WORDMARK ============ -->
+  <g transform="translate(320, 430)">
+    <!-- Main title -->
+    <text x="0" y="0"
+          font-family="'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif"
+          font-weight="900"
+          font-size="40"
+          letter-spacing="1"
+          text-anchor="middle"
+          fill="#FFFFFF">PREMIUM TECH RENTALS</text>
+
+    <!-- Subtitle -->
+    <text x="0" y="38"
+          font-family="'Inter', 'Segoe UI', system-ui, sans-serif"
+          font-weight="600"
+          font-size="17"
+          letter-spacing="7"
+          text-anchor="middle"
+          fill="#FFFFFF"></text>
+  </g>
+</svg>

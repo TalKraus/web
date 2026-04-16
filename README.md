@@ -23,6 +23,12 @@ docker run -p 5000:5000 talkraus/techrent-pro:latest
 docker run -p 5000:5000 --env-file .env talkraus/techrent-pro:latest
 ```
 
+### Options push to Docker Hub
+```sh
+docker tag talkraus/techrent-pro:latest talkraus/techrent-pro:latest
+docker push talkraus/techrent-pro:latest
+```
+
 ### Pull directly from Docker Hub
 ```sh
 docker pull talkraus/techrent-pro:latest
