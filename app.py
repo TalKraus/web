@@ -5,8 +5,8 @@ import os
 
 from dotenv import load_dotenv
 from flasgger import Swagger
-from flask import Flask, render_template
-
+from flask import Flask, render_template, jsonify, request
+from werkzeug.wrappers import Response
 
 from routes import equipment
 from routes import customers
@@ -90,6 +90,43 @@ def create_app() -> Flask:
             "reports.html",
             report=report,
         )
+
+    # Error handlers - API paths always return JSON
+    @app.errorhandler(400)
+    def bad_request(
+        error: Exception,
+    ) -> tuple[Response, int] | tuple[str, int]:
+        """Handle 400 errors."""
+        if request.path.startswith("/api/"):
+            return jsonify({"error": "Bad request"}), 400
+        return render_template("errors/404.html"), 400
+
+    @app.errorhandler(404)
+    def page_not_found(
+        error: Exception,
+    ) -> tuple[Response, int] | tuple[str, int]:
+        """Handle 404 errors."""
+        if request.path.startswith("/api/"):
+            return jsonify({"error": "Not found"}), 404
+        return render_template("errors/404.html"), 404
+
+    @app.errorhandler(405)
+    def method_not_allowed(
+        error: Exception,
+    ) -> tuple[Response, int] | tuple[str, int]:
+        """Handle 405 errors."""
+        if request.path.startswith("/api/"):
+            return jsonify({"error": "Method not allowed"}), 405
+        return render_template("errors/404.html"), 405
+
+    @app.errorhandler(500)
+    def internal_error(
+        error: Exception,
+    ) -> tuple[Response, int] | tuple[str, int]:
+        """Handle 500 errors."""
+        if request.path.startswith("/api/"):
+            return jsonify({"error": "Internal server error"}), 500
+        return render_template("errors/500.html"), 500
 
 
     return app
