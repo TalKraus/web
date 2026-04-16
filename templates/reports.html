@@ -1,0 +1,106 @@
+<!-- reports.html - Reports and analytics page -->
+{% extends "base.html" %}
+{% block title %}Reports - TechRent Pro{% endblock %}
+{% block nav_reports %}active{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Reports & Analytics</h1>
+
+{% if report.total_rentals == 0 %}
+<div class="alert alert-info">
+    No rental data yet. Create some rentals to see analytics.
+</div>
+{% else %}
+
+<!-- Revenue Cards -->
+<div class="row mb-4">
+    <div class="col-md-6 mb-3">
+        <div class="card kpi-card border-success">
+            <div class="card-body text-center">
+                <h5 class="card-title text-muted">Total Completed Revenue</h5>
+                <h2 class="text-success">
+                    ${{ report.total_revenue | round(2) }}
+                </h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-3">
+        <div class="card kpi-card border-primary">
+            <div class="card-body text-center">
+                <h5 class="card-title text-muted">Active Pipeline</h5>
+                <h2 class="text-primary">
+                    ${{ report.active_revenue | round(2) }}
+                </h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Top Equipment & Customers -->
+<div class="row mb-4">
+    <div class="col-md-6 mb-3">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Top Equipment by Rentals</h5>
+            </div>
+            <div class="card-body">
+                {% if report.top_equipment %}
+                <ol>
+                    {% for eq in report.top_equipment %}
+                    <li>{{ eq.name }} ({{ eq.rental_count }}x)</li>
+                    {% endfor %}
+                </ol>
+                {% else %}
+                <p class="text-muted">No data available.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-3">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Top Customers by Spend</h5>
+            </div>
+            <div class="card-body">
+                {% if report.top_customers %}
+                <ol>
+                    {% for cust in report.top_customers %}
+                    <li>{{ cust.name }} - ${{ cust.total_spend | round(2) }}</li>
+                    {% endfor %}
+                </ol>
+                {% else %}
+                <p class="text-muted">No data available.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Status Distribution -->
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">Status Distribution</h5>
+    </div>
+    <div class="card-body">
+        {% set total = report.total_rentals %}
+        {% for status, count in report.status_counts.items() %}
+            {% set pct = (count / total * 100) if total > 0 else 0 %}
+            <div class="mb-3">
+                <div class="d-flex justify-content-between mb-1">
+                    <span>{{ status | upper }}</span>
+                    <span>{{ count }} ({{ pct | round(1) }}%)</span>
+                </div>
+                <div class="progress">
+                    <div class="progress-bar
+                        {% if status == 'active' %}bg-success
+                        {% elif status == 'returned' %}bg-secondary
+                        {% else %}bg-danger{% endif %}"
+                         style="width: {{ pct }}%"></div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endif %}
+{% endblock %}

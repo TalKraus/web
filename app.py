@@ -73,6 +73,22 @@ def create_app() -> Flask:
             stats=stats,
             recent_rentals=recent,
         )
+    
+        # Reports route
+    @app.route("/reports")
+    def reports() -> str:
+        """
+        Render the reports and analytics page.
+
+        Returns:
+            Response: Rendered reports.html with report data.
+        """
+        report = db.get_report_data()
+        return render_template(
+            "reports.html",
+            report=report,
+        )
+
 
     return app
 

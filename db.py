@@ -586,3 +586,79 @@ def is_email_unique(email: str, exclude_id: int | None = None) -> bool:
                 continue
             return False
     return True
+
+# ===================== Report Functions =====================
+
+def get_report_data() -> dict:
+    """
+    Get aggregated report data for the reports page.
+
+    Returns:
+        dict: total_revenue, active_revenue, top_equipment,
+              top_customers, status_counts, total_rentals.
+    """
+    total_revenue = sum(
+        rental["total_cost"]
+        for rental in rentals_db
+        if rental["status"] == "returned"
+    )
+    active_revenue = sum(
+        rental["total_cost"]
+        for rental in rentals_db
+        if rental["status"] == "active"
+    )
+
+    # Status counts
+    status_counts = {"active": 0, "returned": 0, "overdue": 0}
+    for rental in rentals_db:
+        if rental["status"] in status_counts:
+            status_counts[rental["status"]] += 1
+
+    # Top equipment by rental count
+    eq_counts: dict[int, int] = {}
+    for rental in rentals_db:
+        eq_id = int(rental["equipment_id"])
+        eq_counts[eq_id] = eq_counts.get(eq_id, 0) + 1
+    top_eq = sorted(
+        eq_counts.items(),
+        key=lambda pair: pair[1],
+        reverse=True,
+    )[:3]
+    top_equipment = []
+    for eq_id, count in top_eq:
+        eq = get_equipment_by_id(eq_id)
+        top_equipment.append(
+            {
+                "name": eq["name"] if eq else "Unknown",
+                "rental_count": count,
+            }
+        )
+
+    # Top customers by total spend
+    cust_spend: dict[int, float] = {}
+    for rental in rentals_db:
+        cid = int(rental["customer_id"])
+        cust_spend[cid] = cust_spend.get(cid, 0) + float(rental["total_cost"])
+    top_cust = sorted(
+        cust_spend.items(),
+        key=lambda pair: pair[1],
+        reverse=True,
+    )[:3]
+    top_customers = []
+    for cust_id, spend in top_cust:
+        cust = get_customer_by_id(cust_id)
+        top_customers.append(
+            {
+                "name": cust["name"] if cust else "Unknown",
+                "total_spend": spend,
+            }
+        )
+
+    return {
+        "total_revenue": total_revenue,
+        "active_revenue": active_revenue,
+        "top_equipment": top_equipment,
+        "top_customers": top_customers,
+        "status_counts": status_counts,
+        "total_rentals": len(rentals_db),
+    }
