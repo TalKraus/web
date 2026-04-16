@@ -2,8 +2,11 @@
 # db.py - In-memory database with seed data and CRUD functions
 # TechRent Pro - Equipment Rental Platform
 
+import threading
 from datetime import datetime
 
+# Thread lock for safe writes
+_lock = threading.Lock()
 
 # --- Seed Data ---
 
@@ -219,18 +222,19 @@ def create_rental(data: dict) -> dict:
         dict: The newly created rental dict.
     """
     global _next_rental_id
-    new_rental = {
-        "id": _next_rental_id,
-        "equipment_id": int(data["equipment_id"]),
-        "customer_id": int(data["customer_id"]),
-        "start_date": data["start_date"],
-        "end_date": data["end_date"],
-        "status": "active",
-        "total_cost": float(data["total_cost"]),
-    }
-    _next_rental_id += 1
-    rentals_db.append(new_rental)
-    return dict(new_rental)
+    with _lock:
+        new_rental = {
+            "id": _next_rental_id,
+            "equipment_id": int(data["equipment_id"]),
+            "customer_id": int(data["customer_id"]),
+            "start_date": data["start_date"],
+            "end_date": data["end_date"],
+            "status": "active",
+            "total_cost": float(data["total_cost"]),
+        }
+        _next_rental_id += 1
+        rentals_db.append(new_rental)
+        return dict(new_rental)
 
 
 def mark_rental_returned(rental_id: int) -> dict | None:
@@ -244,13 +248,14 @@ def mark_rental_returned(rental_id: int) -> dict | None:
         dict or None: Updated rental, or None if not found
                       or already returned.
     """
-    for rental in rentals_db:
-        if rental["id"] == rental_id:
-            if rental["status"] == "returned":
-                return None
-            rental["status"] = "returned"
-            return dict(rental)
-    return None
+    with _lock:
+        for rental in rentals_db:
+            if rental["id"] == rental_id:
+                if rental["status"] == "returned":
+                    return None
+                rental["status"] = "returned"
+                return dict(rental)
+        return None
 
 
 def get_rentals_for_equipment(eq_id: int) -> list[dict]:
@@ -420,18 +425,19 @@ def create_equipment(data: dict) -> dict:
         dict: The newly created equipment dict with auto ID.
     """
     global _next_equipment_id
-    new_item = {
-        "id": _next_equipment_id,
-        "name": data["name"],
-        "category": data["category"],
-        "daily_rate": float(data["daily_rate"]),
-        "quantity": int(data["quantity"]),
-        "description": data.get("description", ""),
-        "available": bool(data.get("available", True)),
-    }
-    _next_equipment_id += 1
-    equipment_db.append(new_item)
-    return dict(new_item)
+    with _lock:
+        new_item = {
+            "id": _next_equipment_id,
+            "name": data["name"],
+            "category": data["category"],
+            "daily_rate": float(data["daily_rate"]),
+            "quantity": int(data["quantity"]),
+            "description": data.get("description", ""),
+            "available": bool(data.get("available", True)),
+        }
+        _next_equipment_id += 1
+        equipment_db.append(new_item)
+        return dict(new_item)
 
 
 def update_equipment(eq_id: int, data: dict) -> dict | None:
@@ -445,21 +451,26 @@ def update_equipment(eq_id: int, data: dict) -> dict | None:
     Returns:
         dict or None: Updated equipment dict, or None if not found.
     """
-    for item in equipment_db:
-        if item["id"] == eq_id:
-            item["name"] = data.get("name", item["name"])
-            item["category"] = data.get("category", item["category"])
-            item["daily_rate"] = float(
-                data.get("daily_rate", item["daily_rate"])
-            )
-            item["quantity"] = int(data.get("quantity", item["quantity"]))
-            item["description"] = data.get(
-                "description", item["description"]
-            )
-            if "available" in data:
-                item["available"] = bool(data["available"])
-            return dict(item)
-    return None
+    with _lock:
+        for item in equipment_db:
+            if item["id"] == eq_id:
+                item["name"] = data.get("name", item["name"])
+                item["category"] = data.get(
+                    "category", item["category"]
+                )
+                item["daily_rate"] = float(
+                    data.get("daily_rate", item["daily_rate"])
+                )
+                item["quantity"] = int(
+                    data.get("quantity", item["quantity"])
+                )
+                item["description"] = data.get(
+                    "description", item["description"]
+                )
+                if "available" in data:
+                    item["available"] = bool(data["available"])
+                return dict(item)
+        return None
 
 
 def delete_equipment(eq_id: int) -> bool:
@@ -472,11 +483,12 @@ def delete_equipment(eq_id: int) -> bool:
     Returns:
         bool: True if deleted, False if not found.
     """
-    for i, item in enumerate(equipment_db):
-        if item["id"] == eq_id:
-            equipment_db.pop(i)
-            return True
-    return False
+    with _lock:
+        for i, item in enumerate(equipment_db):
+            if item["id"] == eq_id:
+                equipment_db.pop(i)
+                return True
+        return False
 
 # ===================== Customer Functions =====================
 
@@ -517,16 +529,17 @@ def create_customer(data: dict) -> dict:
         dict: The newly created customer dict.
     """
     global _next_customer_id
-    new_cust = {
-        "id": _next_customer_id,
-        "name": data["name"],
-        "email": data["email"],
-        "phone": data["phone"],
-        "created_at": datetime.now().strftime("%Y-%m-%d"),
-    }
-    _next_customer_id += 1
-    customers_db.append(new_cust)
-    return dict(new_cust)
+    with _lock:
+        new_cust = {
+            "id": _next_customer_id,
+            "name": data["name"],
+            "email": data["email"],
+            "phone": data["phone"],
+            "created_at": datetime.now().strftime("%Y-%m-%d"),
+        }
+        _next_customer_id += 1
+        customers_db.append(new_cust)
+        return dict(new_cust)
 
 
 def update_customer(cust_id: int, data: dict) -> dict | None:
@@ -540,13 +553,14 @@ def update_customer(cust_id: int, data: dict) -> dict | None:
     Returns:
         dict or None: Updated customer dict, or None.
     """
-    for cust in customers_db:
-        if cust["id"] == cust_id:
-            cust["name"] = data.get("name", cust["name"])
-            cust["email"] = data.get("email", cust["email"])
-            cust["phone"] = data.get("phone", cust["phone"])
-            return dict(cust)
-    return None
+    with _lock:
+        for cust in customers_db:
+            if cust["id"] == cust_id:
+                cust["name"] = data.get("name", cust["name"])
+                cust["email"] = data.get("email", cust["email"])
+                cust["phone"] = data.get("phone", cust["phone"])
+                return dict(cust)
+        return None
 
 
 def delete_customer(cust_id: int) -> bool:
@@ -559,13 +573,14 @@ def delete_customer(cust_id: int) -> bool:
     Returns:
         bool: True if deleted, False if not found or has rentals.
     """
-    if has_active_rentals(cust_id):
+    with _lock:
+        if has_active_rentals(cust_id):
+            return False
+        for i, cust in enumerate(customers_db):
+            if cust["id"] == cust_id:
+                customers_db.pop(i)
+                return True
         return False
-    for i, cust in enumerate(customers_db):
-        if cust["id"] == cust_id:
-            customers_db.pop(i)
-            return True
-    return False
 
 
 def is_email_unique(email: str, exclude_id: int | None = None) -> bool:
