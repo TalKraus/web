@@ -1,0 +1,126 @@
+<!-- rentals/form.html - New rental form -->
+{% extends "base.html" %}
+{% block title %}New Rental - TechRent Pro{% endblock %}
+{% block nav_rentals %}active{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">New Rental</h1>
+
+<div class="card">
+    <div class="card-body">
+        <form method="POST"
+              action="{{ url_for('rentals.rental_new_submit') }}">
+
+            <!-- Customer -->
+            <div class="mb-3">
+                <label for="customer_id" class="form-label">Customer *</label>
+                <select class="form-select
+                        {% if errors.customer_id %}is-invalid{% endif %}"
+                        id="customer_id" name="customer_id">
+                    <option value="">Select a customer</option>
+                    {% for c in customers %}
+                    <option value="{{ c.id }}"
+                        {% if form_data.customer_id is defined and form_data.customer_id|string == c.id|string %}selected{% endif %}>
+                        {{ c.name }} ({{ c.email }})
+                    </option>
+                    {% endfor %}
+                </select>
+                {% if errors.customer_id %}
+                <div class="invalid-feedback">{{ errors.customer_id }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Equipment -->
+            <div class="mb-3">
+                <label for="equipment_id" class="form-label">Equipment *</label>
+                <select class="form-select
+                        {% if errors.equipment_id %}is-invalid{% endif %}"
+                        id="equipment_id" name="equipment_id">
+                    <option value="">Select equipment</option>
+                    {% for e in equipment_list %}
+                    <option value="{{ e.id }}"
+                            data-rate="{{ e.daily_rate }}"
+                        {% if form_data.equipment_id is defined and form_data.equipment_id|string == e.id|string %}selected{% endif %}>
+                        {{ e.name }} - ${{ e.daily_rate | round(2) }}/day
+                    </option>
+                    {% endfor %}
+                </select>
+                {% if errors.equipment_id %}
+                <div class="invalid-feedback">{{ errors.equipment_id }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Dates -->
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="start_date" class="form-label">Start Date *</label>
+                    <input type="date" class="form-control
+                           {% if errors.start_date %}is-invalid{% endif %}"
+                           id="start_date" name="start_date"
+                           value="{{ form_data.start_date if form_data.start_date is defined else '' }}">
+                    {% if errors.start_date %}
+                    <div class="invalid-feedback">{{ errors.start_date }}</div>
+                    {% endif %}
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="end_date" class="form-label">End Date *</label>
+                    <input type="date" class="form-control
+                           {% if errors.end_date %}is-invalid{% endif %}"
+                           id="end_date" name="end_date"
+                           value="{{ form_data.end_date if form_data.end_date is defined else '' }}">
+                    {% if errors.end_date %}
+                    <div class="invalid-feedback">{{ errors.end_date }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Cost Preview -->
+            <div class="mb-3">
+                <label class="form-label">Estimated Total Cost</label>
+                <p class="form-control-plaintext fw-bold" id="cost-preview">
+                    Select equipment and dates to see cost
+                </p>
+            </div>
+
+            <!-- Buttons -->
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-success">
+                    Create Rental
+                </button>
+                <a href="{{ url_for('rentals.rental_list') }}"
+                   class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Auto-compute cost preview
+    function updateCost() {
+        const eqSelect = document.getElementById('equipment_id');
+        const startInput = document.getElementById('start_date');
+        const endInput = document.getElementById('end_date');
+        const preview = document.getElementById('cost-preview');
+
+        const selectedOption = eqSelect.options[eqSelect.selectedIndex];
+        const rate = parseFloat(selectedOption.getAttribute('data-rate'));
+        const start = new Date(startInput.value);
+        const end = new Date(endInput.value);
+
+        if (rate && startInput.value && endInput.value && end > start) {
+            const days = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+            const total = (rate * days).toFixed(2);
+            preview.textContent = '$' + total + ' (' + days + ' days x $' + rate.toFixed(2) + '/day)';
+        } else {
+            preview.textContent = 'Select equipment and dates to see cost';
+        }
+    }
+
+    document.getElementById('equipment_id').addEventListener('change', updateCost);
+    document.getElementById('start_date').addEventListener('change', updateCost);
+    document.getElementById('end_date').addEventListener('change', updateCost);
+    updateCost();
+</script>
+{% endblock %}

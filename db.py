@@ -155,7 +155,6 @@ def get_dashboard_stats() -> dict:
 
 # ===================== Rental Functions =====================
 
-
 def get_recent_rentals(limit: int = 5) -> list[dict]:
     """
     Get the most recent rentals with names resolved.
@@ -182,6 +181,77 @@ def get_recent_rentals(limit: int = 5) -> list[dict]:
         results.append(entry)
     return results
 
+def get_all_rentals() -> list[dict]:
+    """
+    Return all rentals.
+
+    Returns:
+        list[dict]: List of all rental dicts.
+    """
+    return list(rentals_db)
+
+
+def get_rental_by_id(rental_id: int) -> dict | None:
+    """
+    Find a single rental by ID.
+
+    Args:
+        rental_id (int): The rental ID.
+
+    Returns:
+        dict or None: The rental dict, or None.
+    """
+    for rental in rentals_db:
+        if rental["id"] == rental_id:
+            return dict(rental)
+    return None
+
+
+def create_rental(data: dict) -> dict:
+    """
+    Create a new rental.
+
+    Args:
+        data (dict): Must contain equipment_id, customer_id,
+                     start_date, end_date, total_cost.
+
+    Returns:
+        dict: The newly created rental dict.
+    """
+    global _next_rental_id
+    new_rental = {
+        "id": _next_rental_id,
+        "equipment_id": int(data["equipment_id"]),
+        "customer_id": int(data["customer_id"]),
+        "start_date": data["start_date"],
+        "end_date": data["end_date"],
+        "status": "active",
+        "total_cost": float(data["total_cost"]),
+    }
+    _next_rental_id += 1
+    rentals_db.append(new_rental)
+    return dict(new_rental)
+
+
+def mark_rental_returned(rental_id: int) -> dict | None:
+    """
+    Mark a rental as returned.
+
+    Args:
+        rental_id (int): The rental ID.
+
+    Returns:
+        dict or None: Updated rental, or None if not found
+                      or already returned.
+    """
+    for rental in rentals_db:
+        if rental["id"] == rental_id:
+            if rental["status"] == "returned":
+                return None
+            rental["status"] = "returned"
+            return dict(rental)
+    return None
+
 
 def get_rentals_for_equipment(eq_id: int) -> list[dict]:
     """
@@ -204,6 +274,29 @@ def get_rentals_for_equipment(eq_id: int) -> list[dict]:
             results.append(entry)
     return results
 
+
+def get_rentals_for_customer(cust_id: int) -> list[dict]:
+    """
+    Get all rentals for a specific customer.
+
+    Args:
+        cust_id (int): The customer ID.
+
+    Returns:
+        list[dict]: Rentals with equipment_name added.
+    """
+    results = []
+    for rental in rentals_db:
+        if rental["customer_id"] == cust_id:
+            entry = dict(rental)
+            equipment = get_equipment_by_id(int(rental["equipment_id"]))
+            entry["equipment_name"] = (
+                equipment["name"] if equipment else "Unknown"
+            )
+            results.append(entry)
+    return results
+
+
 def has_active_rentals(customer_id: int) -> bool:
     """
     Check if a customer has any active rentals.
@@ -221,6 +314,61 @@ def has_active_rentals(customer_id: int) -> bool:
         ):
             return True
     return False
+
+
+def check_overlap(equipment_id: int, start_date: str, end_date: str) -> bool:
+    """
+    Check if a date range overlaps with any active rental
+    for the given equipment. Accounts for equipment quantity
+    so multi-unit items can be rented concurrently.
+
+    Args:
+        equipment_id (int): The equipment ID.
+        start_date (str): ISO start date.
+        end_date (str): ISO end date.
+
+    Returns:
+        bool: True if all units are booked (no availability).
+    """
+    eq = get_equipment_by_id(equipment_id)
+    if not eq:
+        return True
+    overlap_count = sum(
+        1
+        for rental in rentals_db
+        if rental["equipment_id"] == equipment_id
+        and rental["status"] == "active"
+        and start_date < str(rental["end_date"])
+        and end_date > str(rental["start_date"])
+    )
+    return overlap_count >= int(eq["quantity"])
+
+
+
+def get_available_equipment_for_rental() -> list[dict]:
+    """
+    Get equipment that is available for new rentals.
+    Only returns items where available=True AND
+    active rental count < quantity.
+
+    Returns:
+        list[dict]: Available equipment items.
+    """
+    # Count active rentals per equipment
+    active_counts: dict[int, int] = {}
+    for rental in rentals_db:
+        if rental["status"] == "active":
+            eq_id = int(rental["equipment_id"])
+            active_counts[eq_id] = active_counts.get(eq_id, 0) + 1
+
+    results = []
+    for eq in equipment_db:
+        if eq["available"]:
+            active = active_counts.get(int(eq["id"]), 0)
+            if active < int(eq["quantity"]):
+                results.append(dict(eq))
+    return results
+
 
 # ===================== Equipment Functions =====================
 

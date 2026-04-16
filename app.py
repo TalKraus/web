@@ -10,6 +10,7 @@ from flask import Flask, render_template
 
 from routes import equipment
 from routes import customers
+from routes import rentals
 import db
 
 
@@ -53,7 +54,8 @@ def create_app() -> Flask:
     # Register blueprints
     app.register_blueprint(equipment.equipment_bp)
     app.register_blueprint(customers.customers_bp)
-    
+    app.register_blueprint(rentals.rentals_bp)
+
     # Dashboard route
     @app.route("/")
     def dashboard() -> str:
