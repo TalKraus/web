@@ -173,6 +173,29 @@ def get_recent_rentals(limit: int = 5) -> list[dict]:
         results.append(entry)
     return results
 
+
+def get_rentals_for_equipment(eq_id: int) -> list[dict]:
+    """
+    Get all rentals for a specific equipment item.
+
+    Args:
+        eq_id (int): The equipment ID.
+
+    Returns:
+        list[dict]: Rentals with customer_name added.
+    """
+    results = []
+    for rental in rentals_db:
+        if rental["equipment_id"] == eq_id:
+            entry = dict(rental)
+            customer = get_customer_by_id(int(rental["customer_id"]))
+            entry["customer_name"] = (
+                customer["name"] if customer else "Unknown"
+            )
+            results.append(entry)
+    return results
+
+
 # ===================== Customer Functions =====================
 
 
@@ -230,4 +253,3 @@ def get_equipment_categories() -> list[str]:
     """
     cats: set[str] = {str(item["category"]) for item in equipment_db}
     return sorted(cats)
-

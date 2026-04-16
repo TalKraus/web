@@ -5,6 +5,7 @@ from flask import (
     Blueprint,
     render_template,
     request,
+    abort,
 )
 
 import db
@@ -45,4 +46,32 @@ def equipment_list() -> str:
         categories=categories,
         selected_category=category,
         search_query=search,
+    )
+
+
+
+@equipment_bp.route("/equipment/<int:eq_id>")
+def equipment_detail(eq_id: int) -> str:
+    """
+    Show detail page for a single equipment item.
+
+    Args:
+        eq_id (int): The equipment ID.
+
+    Returns:
+        str: Rendered equipment/detail.html or 404.
+    """
+    item = db.get_equipment_by_id(eq_id)
+    if not item:
+        abort(404)
+
+    history = db.get_rentals_for_equipment(eq_id)
+    active_count = sum(1 for rental in history if rental["status"] == "active")
+    available_qty = item["quantity"] - active_count
+
+    return render_template(
+        "equipment/detail.html",
+        equipment=item,
+        history=history,
+        available_qty=available_qty,
     )

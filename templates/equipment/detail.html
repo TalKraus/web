@@ -1,0 +1,85 @@
+<!-- equipment/detail.html - Equipment detail page -->
+{% extends "base.html" %}
+{% from "macros.html" import status_badge %}
+{% block title %}{{ equipment.name }} - TechRent Pro{% endblock %}
+{% block nav_equipment %}active{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <a href="{{ url_for('equipment.equipment_list') }}"
+       class="btn btn-outline-secondary">Back to Equipment</a>
+    <a href="https://www.TODO.example"
+       class="btn btn-warning">Edit</a>
+</div>
+
+<!-- Equipment Card -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h2 class="mb-0">{{ equipment.name }}</h2>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4">
+                <p><strong>Category:</strong> {{ equipment.category }}</p>
+            </div>
+            <div class="col-md-4">
+                <p><strong>Daily Rate:</strong> ${{ equipment.daily_rate | round(2) }}</p>
+            </div>
+            <div class="col-md-4">
+                <p><strong>Quantity:</strong> {{ equipment.quantity }}</p>
+            </div>
+        </div>
+        <p><strong>Description:</strong></p>
+        <p>{{ equipment.description | default("No description provided.") }}</p>
+        <p>
+            <strong>Currently Available:</strong>
+            {{ available_qty }} of {{ equipment.quantity }}
+        </p>
+        <p>
+            <strong>Status:</strong>
+            {% if equipment.available %}
+                <span class="badge bg-success">Available</span>
+            {% else %}
+                <span class="badge bg-danger">Unavailable</span>
+            {% endif %}
+        </p>
+    </div>
+</div>
+
+<!-- Rental History -->
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">Rental History</h5>
+    </div>
+    <div class="card-body">
+        {% if history %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Customer</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Status</th>
+                        <th>Total Cost</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for rental in history %}
+                    <tr>
+                        <td>{{ rental.customer_name }}</td>
+                        <td>{{ rental.start_date }}</td>
+                        <td>{{ rental.end_date }}</td>
+                        <td>{{ status_badge(rental.status) }}</td>
+                        <td>${{ rental.total_cost | round(2) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted">No rental history for this equipment.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
