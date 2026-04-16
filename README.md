@@ -6,6 +6,9 @@
 ## Docker Hub
 https://hub.docker.com/r/talkraus/techrent-pro
 
+## Screenshot of Image in docker hub
+![Docker Hub Image](static/img/docker-hub.png)
+
 ## Build & Run
 
 ### Build the Docker image
