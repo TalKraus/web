@@ -144,6 +144,7 @@ def get_dashboard_stats() -> dict:
         "total_customers": total_cust,
     }
 
+# ===================== Rental Functions =====================
 
 
 def get_recent_rentals(limit: int = 5) -> list[dict]:
@@ -172,6 +173,8 @@ def get_recent_rentals(limit: int = 5) -> list[dict]:
         results.append(entry)
     return results
 
+# ===================== Customer Functions =====================
+
 
 def get_customer_by_id(cust_id: int) -> dict | None:
     """
@@ -189,6 +192,20 @@ def get_customer_by_id(cust_id: int) -> dict | None:
     return None
 
 
+
+
+# ===================== Equipment Functions =====================
+
+def get_all_equipment() -> list[dict]:
+    """
+    Return all equipment items.
+
+    Returns:
+        list[dict]: List of all equipment dicts.
+    """
+    return list(equipment_db)
+
+
 def get_equipment_by_id(eq_id: int) -> dict | None:
     """
     Find a single equipment item by its ID.
@@ -203,3 +220,14 @@ def get_equipment_by_id(eq_id: int) -> dict | None:
         if item["id"] == eq_id:
             return dict(item)
     return None
+
+def get_equipment_categories() -> list[str]:
+    """
+    Get a sorted list of unique equipment categories.
+
+    Returns:
+        list[str]: Sorted unique category names.
+    """
+    cats: set[str] = {str(item["category"]) for item in equipment_db}
+    return sorted(cats)
+

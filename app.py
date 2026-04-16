@@ -8,6 +8,7 @@ from flasgger import Swagger
 from flask import Flask, render_template
 
 
+from routes import equipment
 import db
 
 
@@ -49,7 +50,7 @@ def create_app() -> Flask:
     }
     Swagger(app, config=swagger_config, template=swagger_template)
     # Register blueprints
-
+    app.register_blueprint(equipment.equipment_bp)
     # Dashboard route
     @app.route("/")
     def dashboard() -> str:

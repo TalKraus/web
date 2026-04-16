@@ -1,0 +1,94 @@
+<!-- equipment/list.html - Equipment catalogue page -->
+{% extends "base.html" %}
+{% block title %}Equipment - TechRent Pro{% endblock %}
+{% block nav_equipment %}active{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Equipment Catalogue ({{ equipment_list | length }} items)</h1>
+    <a href="https://www.TODO.example"
+       class="btn btn-primary">+ Add Equipment</a>
+</div>
+
+<!-- Search / Filter Bar -->
+<form method="GET" action="https://www.TODO.example"
+      class="row g-2 mb-4">
+    <div class="col-md-3">
+        <label for="category-select" class="form-label">Category</label>
+        <select id="category-select" name="category" class="form-select">
+            <option value="">All Categories</option>
+            {% for cat in categories %}
+            <option value="{{ cat }}"
+                {% if selected_category == cat %}selected{% endif %}>
+                {{ cat }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-md-4">
+        <input type="text" name="search" class="form-control"
+               placeholder="Search by name..."
+               value="{{ search_query }}">
+    </div>
+    <div class="col-md-2">
+        <button type="submit" class="btn btn-outline-secondary w-100">
+            Find
+        </button>
+    </div>
+</form>
+
+<!-- Equipment Table -->
+{% if equipment_list %}
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Rate/Day</th>
+                <th>Qty</th>
+                <th>Available</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in equipment_list %}
+            <tr>
+                <td>{{ item.id }}</td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.category }}</td>
+                <td>${{ item.daily_rate | round(2) }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>
+                    {% if item.available %}
+                        <span class="badge bg-success">Yes</span>
+                    {% else %}
+                        <span class="badge bg-danger">No</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="https://www.TODO.example"
+                       class="btn btn-sm btn-outline-primary">View</a>
+                    <a href="https://www.TODO.example"
+                       class="btn btn-sm btn-outline-warning">Edit</a>
+                    <form method="POST"
+                          action="https://www.TODO.example"
+                          style="display:inline"
+                          onsubmit="return confirm('Are you sure you want to delete this equipment?');">
+                        <button type="submit"
+                                class="btn btn-sm btn-outline-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="alert alert-info">
+    No equipment found. Try a different search or
+    <a href="https://www.TODO.example">add new equipment</a>.
+</div>
+{% endif %}
+{% endblock %}
